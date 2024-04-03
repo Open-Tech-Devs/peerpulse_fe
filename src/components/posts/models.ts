@@ -7,7 +7,7 @@ export enum PostType {
 }
 
 export type PostModel = {
-  id: number;
+  id: string;
   authorId: UserModel["id"];
   PostType: PostType.Post;
   title?: string;

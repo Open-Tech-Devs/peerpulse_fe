@@ -1,4 +1,3 @@
-import routes from "@/api/routes";
 import {
   PollAssignedModel,
   PostAssignedModel,
@@ -9,26 +8,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { API_ENDPOINT, LocalStorageKeys } from "@/config/constants";
 import { useAuthProvider } from "@/providers/authProvider";
-import axios from "axios";
 
 const PostSettingsPopover = (post: PostAssignedModel | PollAssignedModel) => {
   const { user } = useAuthProvider();
-  const getAISummaryStrea = async () => {
-    const res = await axios.post(
-      API_ENDPOINT + routes.getPostExplanation.path,
-      {
-        postId: post.id,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.accessToken)}`,
-        },
-      },
-    );
-    console.log(res.data);
-  };
   return (
     <Popover>
       <PopoverTrigger className="cursor-pointer">
@@ -60,13 +43,6 @@ const PostSettingsPopover = (post: PostAssignedModel | PollAssignedModel) => {
               Delete
             </Button>
           )}
-          <Button
-            variant="outline"
-            className="rounded-none"
-            onClick={getAISummaryStrea}
-          >
-            Get AI Summary
-          </Button>
         </div>
       </PopoverContent>
     </Popover>

@@ -95,6 +95,7 @@ const PostCard = (props: {
           </AspectRatio>
         </Link>
       )}
+      <div>{/* AI Explanation */}</div>
       <Separator className="my-2" />
       <Link to={`/post/${post.id}`} className="flex items-center gap-2">
         {PostMeta.map((meta, index) => (
