@@ -8,9 +8,10 @@ import { Separator } from "@/components/ui/separator";
 import PostComment from "./PostComment";
 import CommentCard from "@/components/comments/CommentCard";
 import { CommentUserAssignedModel } from "@/components/comments/models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DefaultUserImage } from "@/constants";
+import { getImageRatio } from "@/lib/utils";
 
 const PostCard = (props: {
   post: PostAssignedModel;
@@ -20,26 +21,12 @@ const PostCard = (props: {
   const [comments, setComments] = useState<CommentUserAssignedModel[]>(
     post.comments,
   );
-  const getImageRatio = (media?: string) => {
-    if (!media) return;
-    const image = new Image();
-    image.src = media;
-    const ratio = image.width / image.height;
 
-    if (Math.abs(ratio - 16 / 9) <= 0.1) {
-      return 16 / 9;
-    } else if (Math.abs(ratio - 1.91 / 1) <= 0.1) {
-      return 1.91 / 1;
-    } else if (Math.abs(ratio - 1 / 1) <= 0.1) {
-      return 1 / 1;
-    } else if (Math.abs(ratio - 9 / 16) <= 0.1) {
-      return 9 / 16;
-    } else {
-      return 3 / 2; // default ratio
-    }
-  };
+  const [imageRatio, setImageRatio] = useState<number | undefined>(3 / 2);
 
-  const imageRatio = getImageRatio(post.media);
+  useEffect(() => {
+    setImageRatio(getImageRatio(post.media));
+  }, [post.media]);
 
   const PostMeta = [
     {
