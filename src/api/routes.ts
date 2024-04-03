@@ -100,6 +100,11 @@ const routes = {
     method: "GET",
     TRes: Type<CommentUserAssignedModel[]>(),
   },
+  getPostExplanation: {
+    path: "/api/v1/post/explanation",
+    method: "GET",
+    TRes: Type<string>(),
+  },
 };
 
 export default routes;
