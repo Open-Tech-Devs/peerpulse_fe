@@ -17,6 +17,12 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface SignupCredentials {
+  email: string;
+  username: string;
+  password: string;
+}
+
 export interface JwtTokenObtainPair {
   access: string;
   refresh: string;
@@ -30,6 +36,13 @@ const routes = {
     noAuth: true,
     TRes: Type<JwtTokenObtainPair>(),
     TBody: Type<LoginCredentials>(),
+  },
+  signup: {
+    path: "/api/v1/auth/register",
+    method: "POST",
+    noAuth: true,
+    TRes: Type<JwtTokenObtainPair>(),
+    TBody: Type<SignupCredentials>(),
   },
   tokenRefresh: {
     path: "/api/v1/auth/refresh-tokens",

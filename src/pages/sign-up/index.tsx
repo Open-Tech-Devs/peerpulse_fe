@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button";
 import StudentSignup from "@/assets/students-signup.svg";
 import { t } from "i18next";
 import { useLanguage } from "@/providers/languageProvider";
+import axios from "axios";
+import { API_ENDPOINT, LocalStorageKeys } from "@/config/constants";
+import routes from "@/api/routes";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const form = useForm<z.infer<typeof signupFormSchema>>({
@@ -27,6 +31,23 @@ const SignUp = () => {
     },
   });
   const { language } = useLanguage();
+  const navigate = useNavigate();
+
+  const signUp = async (data: z.infer<typeof signupFormSchema>) => {
+    const res = await axios.post(API_ENDPOINT + routes.signup.path, data);
+    if (res.status === 201) {
+      console.log("User created successfully");
+      localStorage.setItem(
+        LocalStorageKeys.accessToken,
+        res.data.tokens.access.token,
+      );
+      localStorage.setItem(
+        LocalStorageKeys.refreshToken,
+        res.data.tokens.refresh.token,
+      );
+      navigate("/");
+    }
+  };
 
   return (
     <AuthPageLayout
@@ -43,7 +64,9 @@ const SignUp = () => {
       <div className="w-5/6 md:w-2/3">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data) => console.log(data))}
+            onSubmit={form.handleSubmit((data) => {
+              signUp(data);
+            })}
             className="flex w-full flex-col gap-5"
           >
             <FormField
