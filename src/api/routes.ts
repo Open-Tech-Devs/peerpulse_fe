@@ -105,6 +105,12 @@ const routes = {
     method: "GET",
     TRes: Type<string>(),
   },
+  updateUser: {
+    path: "/api/v1/user/update",
+    method: "PUT",
+    TRes: Type<UserModel>(),
+    TBody: Type<Partial<UserModel>>(),
+  },
 };
 
 export default routes;

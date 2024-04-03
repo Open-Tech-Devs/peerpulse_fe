@@ -8,14 +8,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { LogOut, Settings2, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuthProvider } from "@/providers/authProvider";
+import { DefaultUserImage } from "@/constants";
 
 export function UserSettingsDropdown() {
+  const { user } = useAuthProvider();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={user?.profilePicture || DefaultUserImage} />
             <AvatarFallback>PP</AvatarFallback>
           </Avatar>
           <span className="sr-only">t{"user-settings-dropdown"}</span>
