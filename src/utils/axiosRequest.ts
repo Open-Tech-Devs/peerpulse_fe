@@ -12,3 +12,19 @@ export const getAISummaryStream = async (postId: string) => {
   );
   console.log(res.data);
 };
+
+export const uploadImage = async (file: File): Promise<string | undefined> => {
+  try {
+    const res = await axios.post(API_ENDPOINT + routes.uploadMedia.path, file, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          LocalStorageKeys.accessToken,
+        )}`,
+        "Content-Type": `image/${file.type.split("/")[1]}`,
+      },
+    });
+    return res.data.mediaUrl as string;
+  } catch (err) {
+    console.error(err);
+  }
+};

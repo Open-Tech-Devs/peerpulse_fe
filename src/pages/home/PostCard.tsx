@@ -10,6 +10,7 @@ import CommentCard from "@/components/comments/CommentCard";
 import { CommentUserAssignedModel } from "@/components/comments/models";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { DefaultUserImage } from "@/constants";
 
 const PostCard = (props: {
   post: PostAssignedModel;
@@ -60,7 +61,7 @@ const PostCard = (props: {
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src="https://picsum.photos/100" />
+            <AvatarImage src={post.Author.profilePicture || DefaultUserImage} />
           </Avatar>
           <p>{post.Author.username}</p>
         </div>

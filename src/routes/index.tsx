@@ -8,6 +8,7 @@ import VerifyEmail from "@/pages/verify-email";
 import Logout from "@/pages/logout";
 import ProtectedRoute from "./ProtectedRoute";
 import Post from "@/pages/post/[id]";
+import Profile from "@/pages/profile";
 
 const sentryCreateBrowserRouter =
   Sentry.wrapCreateBrowserRouter(createBrowserRouter);
@@ -22,6 +23,7 @@ const router = sentryCreateBrowserRouter([
     ),
     children: [
       { path: "/", element: <Home /> },
+      { path: "/profile", element: <Profile /> },
       {
         path: "/post/:id",
         element: <Post />,

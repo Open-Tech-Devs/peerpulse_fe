@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { API_ENDPOINT, LocalStorageKeys } from "@/config/constants";
+import { uploadImage } from "@/utils/axiosRequest";
 import { postFormSchema } from "@/validation/post.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -26,35 +27,22 @@ const PostForm = () => {
     },
   });
 
-  const uploadImage = async (file: File) => {
-    try {
-      const res = await axios.post(
-        API_ENDPOINT + routes.uploadMedia.path,
-        file,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              LocalStorageKeys.accessToken,
-            )}`,
-            "Content-Type": `image/${file.type.split("/")[1]}`,
-          },
-        },
-      );
-      return res.data.mediaUrl;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const createPost = async (data: z.infer<typeof postFormSchema>) => {
-    if (data.media) {
-      data.media = await uploadImage(data.media);
-    }
-    await axios.post(API_ENDPOINT + routes.createPost.path, data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.accessToken)}`,
+    if (!data.media) return;
+    const media = await uploadImage(data.media);
+
+    await axios.post(
+      API_ENDPOINT + routes.createPost.path,
+      {
+        ...data,
+        media,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.accessToken)}`,
+        },
+      },
+    );
   };
   return (
     <div>

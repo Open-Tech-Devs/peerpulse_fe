@@ -7,14 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthProvider } from "@/providers/authProvider";
+import { DefaultUserImage } from "@/constants";
 
 export const CreatePost = () => {
   const { user } = useAuthProvider();
   return (
     <Dialog>
-      <DialogTrigger className="flex w-full cursor-pointer items-center gap-3 rounded-md bg-white p-5 transition-colors duration-200 ease-in-out hover:bg-gray-100 dark:bg-black">
+      <DialogTrigger className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-white p-3 transition-colors duration-200 ease-in-out hover:bg-gray-100 dark:bg-black">
         <Avatar>
-          <AvatarImage src="https://avatars.dicebear.com/api/avataaars/john-doe.svg" />
+          <AvatarImage src={user?.profilePicture || DefaultUserImage} />
         </Avatar>
         <Input
           className="disabled"
