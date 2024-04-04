@@ -3,7 +3,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getRelativeTimeOrFormattedDateTime } from "@/lib/dateFns";
 import PostSettingsPopover from "./PostSettingsPopover";
-import { Heart, MessageSquare } from "lucide-react";
+import { Brain, Heart, MessageSquare, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import PostComment from "./PostComment";
 import CommentCard from "@/components/comments/CommentCard";
@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DefaultUserImage } from "@/constants";
 import { getImageRatio } from "@/lib/utils";
+import { getAISummaryStream } from "@/utils/axiosRequest";
+import Loader from "@/components/common/Loader";
 
 const PostCard = (props: {
   post: PostAssignedModel;
@@ -21,7 +23,6 @@ const PostCard = (props: {
   const [comments, setComments] = useState<CommentUserAssignedModel[]>(
     post.comments,
   );
-
   const [imageRatio, setImageRatio] = useState<number | undefined>(3 / 2);
 
   useEffect(() => {
@@ -83,7 +84,9 @@ const PostCard = (props: {
           </AspectRatio>
         </Link>
       )}
-      <div>{/* AI Explanation */}</div>
+      <div>
+        <AIExplanation postId={post.id} />
+      </div>
       <Separator className="my-2" />
       <Link to={`/post/${post.id}`} className="flex items-center gap-2">
         {PostMeta.map((meta, index) => (
@@ -117,6 +120,57 @@ const PostCard = (props: {
             View all {post._count.comments} comments
           </Link>
         )}
+      </div>
+    </div>
+  );
+};
+
+const AIExplanation = (props: { postId: string }) => {
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  const [aiExplanationLoading, setAiExplanationLoading] = useState(false);
+
+  const getAiExplanation = async () => {
+    try {
+      setAiExplanationLoading(true);
+      setAiExplanation(null);
+      const response = await getAISummaryStream(props.postId);
+      setAiExplanation(response.explanation);
+    } catch (error) {
+      console.error("Error getting AI explanation:", error);
+    } finally {
+      setAiExplanationLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-end gap-2 text-xs">
+        <Brain size={12} className="text-gray-600 dark:text-gray-400" />
+        <p
+          className="cursor-pointer text-gray-600 hover:underline dark:text-gray-400"
+          onClick={getAiExplanation}
+        >
+          Get AI Explanation
+        </p>
+      </div>
+      <div
+        className={`relative rounded-xl bg-gray-100 p-2 dark:bg-gray-800 ${aiExplanationLoading ? "block" : "hidden"}`}
+      >
+        <Loader />
+      </div>
+      <div
+        className={`relative rounded-xl bg-gray-100 p-2 dark:bg-gray-800 ${aiExplanation ? "block" : "hidden"}`}
+      >
+        <div>
+          <XIcon
+            size={16}
+            className="absolute right-2 top-2 cursor-pointer"
+            onClick={() => {
+              setAiExplanation(null);
+            }}
+          />
+          <p className="mt-2 text-sm">{aiExplanation}</p>
+        </div>
       </div>
     </div>
   );

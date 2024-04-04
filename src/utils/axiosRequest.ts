@@ -10,7 +10,7 @@ export const getAISummaryStream = async (postId: string) => {
     { postId },
     { headers: { Authorization: authorization } },
   );
-  console.log(res.data);
+  return res.data;
 };
 
 export const uploadImage = async (file: File): Promise<string | undefined> => {
