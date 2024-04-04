@@ -2,13 +2,15 @@ import routes from "@/api/routes";
 import { API_ENDPOINT, LocalStorageKeys } from "@/config/constants";
 import axios from "axios";
 
-const authorization = `Bearer ${localStorage.getItem(LocalStorageKeys.accessToken)}`;
-
-export const getAISummaryStream = async (postId: string) => {
+export const getAISummary = async (postId: string) => {
   const res = await axios.post(
     API_ENDPOINT + routes.getPostExplanation.path,
     { postId },
-    { headers: { Authorization: authorization } },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.accessToken)}`,
+      },
+    },
   );
   return res.data;
 };

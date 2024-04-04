@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DefaultUserImage } from "@/constants";
 import { getImageRatio } from "@/lib/utils";
-import { getAISummaryStream } from "@/utils/axiosRequest";
+import { getAISummary } from "@/utils/axiosRequest";
 import Loader from "@/components/common/Loader";
 
 const PostCard = (props: {
@@ -133,10 +133,11 @@ const AIExplanation = (props: { postId: string }) => {
     try {
       setAiExplanationLoading(true);
       setAiExplanation(null);
-      const response = await getAISummaryStream(props.postId);
+      const response = await getAISummary(props.postId);
       setAiExplanation(response.explanation);
     } catch (error) {
       console.error("Error getting AI explanation:", error);
+      setAiExplanation("Error getting AI explanation");
     } finally {
       setAiExplanationLoading(false);
     }
