@@ -8,11 +8,13 @@ import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthProvider } from "@/providers/authProvider";
 import { DefaultUserImage } from "@/constants";
+import { useState } from "react";
 
 export const CreatePost = () => {
   const { user } = useAuthProvider();
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-white p-3 transition-colors duration-200 ease-in-out hover:bg-gray-100 dark:bg-black">
         <Avatar>
           <AvatarImage src={user?.profilePicture || DefaultUserImage} />
@@ -36,7 +38,7 @@ export const CreatePost = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="post">
-              <PostForm />
+              <PostForm closeForm={setOpen} />
             </TabsContent>
             <TabsContent value="poll">
               <PollForm />

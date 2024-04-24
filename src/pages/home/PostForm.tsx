@@ -6,7 +6,9 @@ import {
   FormItem,
   FormControl,
   FormMessage,
+  FormLabel,
 } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { API_ENDPOINT, LocalStorageKeys } from "@/config/constants";
@@ -16,14 +18,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Dispatch, SetStateAction } from "react";
 
-const PostForm = () => {
+interface PostFormProps {
+  closeForm: Dispatch<SetStateAction<boolean>>;
+}
+
+const PostForm = ({ closeForm }: PostFormProps) => {
   const postForm = useForm<z.infer<typeof postFormSchema>>({
     resolver: zodResolver(postFormSchema),
     defaultValues: {
       title: "",
       content: "",
       media: undefined,
+      isPublic: false,
     },
   });
 
@@ -43,6 +51,8 @@ const PostForm = () => {
         },
       },
     );
+    closeForm(false);
+    window.location.reload();
   };
   return (
     <div>
@@ -94,6 +104,22 @@ const PostForm = () => {
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={postForm.control}
+            name="isPublic"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel className="ml-2">Is the post public?</FormLabel>
                 <FormMessage />
               </FormItem>
             )}

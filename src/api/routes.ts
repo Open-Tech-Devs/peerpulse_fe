@@ -91,6 +91,13 @@ const routes = {
       Type<z.infer<typeof postFormSchema>[]>() ||
       Type<z.infer<typeof pollFormSchema>[]>(),
   },
+  queryPublicPosts: {
+    path: "/api/v1/post/public",
+    method: "GET",
+    TRes:
+      Type<z.infer<typeof postFormSchema>[]>() ||
+      Type<z.infer<typeof pollFormSchema>[]>(),
+  },
   getPostById: {
     path: "/api/v1/post/",
     method: "GET",

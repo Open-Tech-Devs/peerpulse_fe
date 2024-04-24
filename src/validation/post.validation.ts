@@ -21,6 +21,7 @@ export const postFormSchema = z.object({
       message: "File type must be jpeg, jpg or png",
     })
     .optional(),
+  isPublic: z.boolean().default(false),
 });
 
 export const pollFormSchema = z.object({
@@ -62,4 +63,5 @@ export const pollFormSchema = z.object({
       }),
     )
     .min(2),
+  isPublic: z.boolean().default(false),
 });
