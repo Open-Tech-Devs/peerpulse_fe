@@ -14,12 +14,15 @@ import axios from "axios";
 import routes from "@/api/routes";
 import { API_ENDPOINT, LocalStorageKeys } from "@/config/constants";
 import { CommentUserAssignedModel } from "@/components/comments/models";
+import { DefaultUserImage } from "@/constants";
+import { useAuthProvider } from "@/providers/authProvider";
 
 const PostComment = (props: {
   post: PostAssignedModel | PollAssignedModel;
   onComment?: (comment: CommentUserAssignedModel) => void;
 }) => {
   const { post, onComment } = props;
+  const { user } = useAuthProvider();
 
   const commentForm = useForm<z.infer<typeof commentFormSchema>>({
     resolver: zodResolver(commentFormSchema),
@@ -56,7 +59,7 @@ const PostComment = (props: {
     <div className="flex flex-col gap-2">
       <div className="flex w-full items-center gap-2">
         <Avatar>
-          <AvatarImage src="https://picsum.photos/100" />
+          <AvatarImage src={user?.profilePicture || DefaultUserImage} />
         </Avatar>
         <Form {...commentForm}>
           <form

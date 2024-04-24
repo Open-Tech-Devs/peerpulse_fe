@@ -1,6 +1,7 @@
 export type UserModel = {
   id: string;
   username: string;
+  profilePicture?: string | null;
   email: string;
   isEmailVerified: boolean;
   collegeId: string | null;

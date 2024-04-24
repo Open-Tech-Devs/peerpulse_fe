@@ -1,26 +1,26 @@
 import { checkAccessTokenValidity } from "@/api/common";
 import routes from "@/api/routes";
-import { UserModel } from "@/components/users/models";
 import { API_ENDPOINT, LocalStorageKeys } from "@/config/constants";
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  AuthActions,
+  AuthProviderState,
+  authReducer,
+  initialState,
+} from "./authReducer";
 
-export type AuthProviderState = {
-  user: UserModel | null;
-};
+const AuthProviderStateContext = createContext<AuthProviderState>(initialState);
 
-const initialState: AuthProviderState = {
-  user: null,
-};
+type AuthDispatch = React.Dispatch<AuthActions>;
 
-export const AuthProviderContext =
-  createContext<AuthProviderState>(initialState);
+const AuthDispatchContext = createContext<AuthDispatch>(() => {});
 
-export const useAuthProvider = () => useContext(AuthProviderContext);
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserModel | null>(null);
+export const AuthProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
+  const [state, dispatch] = useReducer(authReducer, initialState);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const accessToken = localStorage.getItem(LocalStorageKeys.accessToken);
       const refreshToken = localStorage.getItem(LocalStorageKeys.refreshToken);
       if (accessToken) {
-        const isValid = await checkAccessTokenValidity(accessToken, setUser);
+        const isValid = await checkAccessTokenValidity(accessToken, dispatch);
         if (isValid) {
           return;
         } else if (refreshToken) {
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await refreshBothTokens(refreshToken);
           await checkAccessTokenValidity(
             localStorage.getItem(LocalStorageKeys.accessToken) as string,
-            setUser,
+            dispatch,
           );
         } else {
           // No refresh token available, navigate to the sign-in page
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       async () => {
         const accessToken = localStorage.getItem(LocalStorageKeys.accessToken);
         if (accessToken) {
-          const isValid = await checkAccessTokenValidity(accessToken, setUser);
+          const isValid = await checkAccessTokenValidity(accessToken, dispatch);
           if (!isValid) {
             // Access token expired, try refreshing it using the refresh token
             const refreshToken = localStorage.getItem(
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               await refreshBothTokens(refreshToken);
               await checkAccessTokenValidity(
                 localStorage.getItem(LocalStorageKeys.accessToken) as string,
-                setUser,
+                dispatch,
               );
             } else {
               // No refresh token available, navigate to the sign-in page
@@ -93,15 +93,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         res.data.refresh.token,
       );
 
-      setUser(res.data);
+      dispatch({
+        type: "AUTH_SUCCESS",
+        payload: res.data.user,
+      });
     } catch (error) {
       navigate("/sign-in");
     }
   };
 
   return (
-    <AuthProviderContext.Provider value={{ user }}>
-      {children}
-    </AuthProviderContext.Provider>
+    <AuthProviderStateContext.Provider value={state}>
+      <AuthDispatchContext.Provider value={dispatch}>
+        {children}
+      </AuthDispatchContext.Provider>
+    </AuthProviderStateContext.Provider>
   );
 };
+
+export const useAuthProvider = () => useContext(AuthProviderStateContext);
+export const useAuthDispatch = () => useContext(AuthDispatchContext);

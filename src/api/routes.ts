@@ -1,4 +1,5 @@
 import { CommentUserAssignedModel } from "@/components/comments/models";
+import { PostAssignedModel } from "@/components/posts/models";
 import { UserModel } from "@/components/users/models";
 import { pollFormSchema, postFormSchema } from "@/validation/post.validation";
 import { z } from "zod";
@@ -16,6 +17,12 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface SignupCredentials {
+  email: string;
+  username: string;
+  password: string;
+}
+
 export interface JwtTokenObtainPair {
   access: string;
   refresh: string;
@@ -29,6 +36,13 @@ const routes = {
     noAuth: true,
     TRes: Type<JwtTokenObtainPair>(),
     TBody: Type<LoginCredentials>(),
+  },
+  signup: {
+    path: "/api/v1/auth/register",
+    method: "POST",
+    noAuth: true,
+    TRes: Type<JwtTokenObtainPair>(),
+    TBody: Type<SignupCredentials>(),
   },
   tokenRefresh: {
     path: "/api/v1/auth/refresh-tokens",
@@ -77,6 +91,17 @@ const routes = {
       Type<z.infer<typeof postFormSchema>[]>() ||
       Type<z.infer<typeof pollFormSchema>[]>(),
   },
+  getPostById: {
+    path: "/api/v1/post/",
+    method: "GET",
+    TRes: Type<PostAssignedModel>(),
+  },
+  likePost: {
+    path: "/api/v1/post/like",
+    method: "POST",
+    TRes: Type<string>(),
+    TBody: Type<{ postId: string }>(),
+  },
   createComment: {
     path: "/api/v1/comment/create",
     method: "POST",
@@ -87,6 +112,17 @@ const routes = {
     path: "/api/v1/comment",
     method: "GET",
     TRes: Type<CommentUserAssignedModel[]>(),
+  },
+  getPostExplanation: {
+    path: "/api/v1/post/explanation",
+    method: "GET",
+    TRes: Type<string>(),
+  },
+  updateUser: {
+    path: "/api/v1/user/update",
+    method: "PUT",
+    TRes: Type<UserModel>(),
+    TBody: Type<Partial<UserModel>>(),
   },
 };
 
