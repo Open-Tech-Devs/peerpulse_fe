@@ -61,7 +61,7 @@ const SignIn = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(login)}
-            className="flex w-full flex-col gap-5"
+            className="flex w-full flex-col gap-5 dark:text-white"
           >
             <FormField
               control={form.control}
@@ -89,7 +89,9 @@ const SignIn = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">{t("sign-in")}</Button>
+            <Button className="text-white dark:bg-black" type="submit">
+              {t("sign-in")}
+            </Button>
           </form>
         </Form>
       </div>

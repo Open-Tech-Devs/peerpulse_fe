@@ -55,6 +55,10 @@ const routes = {
     method: "GET",
     TRes: Type<UserModel>(),
   },
+  getPeersFromCollege: {
+    path: "/api/v1/user/get-peers",
+    method: "GET",
+  },
   sendVerificationEmail: {
     path: "/api/v1/auth/send-verification-email",
     method: "POST",

@@ -69,7 +69,7 @@ const AuthPageLayout = ({
           </Button>
           <LanguageModeToggle />
         </div>
-        <div className="flex h-full w-full flex-col items-center justify-center gap-5">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-5 dark:text-black">
           <div className="px-5 text-center">
             <h1 className="text-3xl font-bold">{title}</h1>
             <p className="text-sm">{subTitle}</p>

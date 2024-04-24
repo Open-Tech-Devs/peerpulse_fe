@@ -53,7 +53,7 @@ const PostCard = (props: {
   ];
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:bg-black">
+    <div className="flex w-full flex-col gap-2 rounded-xl border bg-white p-3 dark:bg-black">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Avatar>
