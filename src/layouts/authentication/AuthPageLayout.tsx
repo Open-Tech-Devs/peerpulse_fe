@@ -5,6 +5,7 @@ import { LocalStorageKeys } from "@/config/constants";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useAuthDispatch } from "@/providers/authProvider";
 
 interface AuthPageLayoutProps {
   children: React.ReactNode;
@@ -31,18 +32,19 @@ const AuthPageLayout = ({
 }: AuthPageLayoutProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const dispatch = useAuthDispatch();
 
   useEffect(() => {
     const accessToken = localStorage.getItem(LocalStorageKeys.accessToken);
 
     const checkLoggedIn = async () => {
       if (accessToken) {
-        const isValid = await checkAccessTokenValidity(accessToken);
+        const isValid = await checkAccessTokenValidity(accessToken, dispatch);
         if (isValid) navigate("/");
       }
     };
     checkLoggedIn();
-  }, [navigate]);
+  }, [dispatch, navigate]);
   return (
     <div className="mx-auto grid grid-cols-1 bg-gray-950 md:h-screen md:grid-cols-2">
       {error && (

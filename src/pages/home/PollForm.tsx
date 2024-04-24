@@ -23,15 +23,12 @@ const PollForm = () => {
     defaultValues: {
       title: "",
       content: "",
-      media: "",
       options: [
         {
           content: "Option 1",
-          media: "",
         },
         {
           content: "Option 2",
-          media: "",
         },
       ],
     },
@@ -110,7 +107,6 @@ const PollForm = () => {
                 ...pollForm.getValues("options"),
                 {
                   content: "",
-                  media: "",
                 },
               ])
             }
